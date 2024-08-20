@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时尚名字选择器</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        button {
+            background-color: #ff9ff3;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        button:hover {
+            background-color: #fd79a8;
+            transform: scale(1.05);
+        }
+        #result {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 50px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>时尚名字选择器</h1>
+        <textarea id="nameList" placeholder="请输入名字，每行一个"></textarea>
+        <button onclick="pickName()">选择一个名字</button>
+        <div id="result"></div>
+    </div>
+
+    <audio id="tickSound" src="https://www.soundjay.com/button/sounds/button-4.mp3" preload="auto"></audio>
+    <audio id="finalSound" src="https://www.soundjay.com/button/sounds/button-10.mp3" preload="auto"></audio>
+
+    <script>
+        let names = [];
+        let isRolling = false;
+        let rollInterval;
+        const tickSound = document.getElementById('tickSound');
+        const finalSound = document.getElementById('finalSound');
+
+        function pickName() {
+            if (isRolling) return;
+            
+            names = document.getElementById('nameList').value.split('\n').filter(name => name.trim() !== '');
+            if (names.length === 0) {
+                alert('请至少输入一个名字。');
+                return;
+            }
+
+            isRolling = true;
+            let counter = 0;
+            const resultElement = document.getElementById('result');
+
+            rollInterval = setInterval(() => {
+                resultElement.textContent = names[Math.floor(Math.random() * names.length)];
+                tickSound.play();
+                counter++;
+
+                if (counter > 20) {
+                    clearInterval(rollInterval);
+                    resultElement.textContent = names[Math.floor(Math.random() * names.length)];
+                    finalSound.play();
+                    isRolling = false;
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
